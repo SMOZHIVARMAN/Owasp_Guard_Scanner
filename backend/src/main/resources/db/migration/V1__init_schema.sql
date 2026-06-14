@@ -1,0 +1,30 @@
+CREATE TABLE users (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    role VARCHAR(20) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE scans (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    target_url VARCHAR(255) NOT NULL,
+    status VARCHAR(20) NOT NULL,
+    started_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    completed_at TIMESTAMP NULL,
+    user_id BIGINT NOT NULL,
+    CONSTRAINT fk_scan_user FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE vulnerabilities (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    severity VARCHAR(20) NOT NULL,
+    owasp_category VARCHAR(100),
+    recommendation TEXT,
+    scan_id BIGINT NOT NULL,
+    CONSTRAINT fk_vuln_scan FOREIGN KEY (scan_id) REFERENCES scans(id)
+);
